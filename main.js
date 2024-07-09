@@ -3,7 +3,7 @@ let news = [];
 
 const getLatestNews = async () => {
   const url = new URL(
-    `https://times-sun.netlify.app/top-headlines?page=1&pageSize=20`
+    `https://times-sun.netlify.app/top-headlines?category=science`
   );
   const response = await fetch(url);
   const data = await response.json();
