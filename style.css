@@ -43,13 +43,13 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: burlywood;
+  background-color: lavender;
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
 }
 .side-menu-list button {
-  margin: 5px;
+  margin: 20px;
   border: none;
   background: none;
   width: 120px;
@@ -72,21 +72,27 @@
 }
 
 .side-menu-list button:hover {
-  background-color: beige;
+  background-color: azure;
   border-radius: 3px;
 }
 .nav {
   padding: 10px;
 }
 .icon-button {
+  margin-top: 5px;
   margin-right: 10px;
 }
 .hide {
   display: none;
 }
-
+#input-area {
+  display: none;
+}
 @media (max-width: 992px) {
   .hide {
     display: block;
+  }
+  .menu {
+    display: none;
   }
 }
