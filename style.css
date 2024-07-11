@@ -24,7 +24,7 @@
   margin: 10px;
 }
 .menu button:hover {
-  background-color: aliceblue;
+  color: darkgray;
 }
 .row {
   padding: 30px;
@@ -72,7 +72,7 @@
 }
 
 .side-menu-list button:hover {
-  background-color: azure;
+  color: fff;
   border-radius: 3px;
 }
 .nav {
