@@ -1,6 +1,7 @@
 const apiKey = `6c9ebc66510b40e3b8f76a56e9af9fb2`;
 let newsList = [];
-const menu = document.querySelectorAll(".menu button");
+const menu = document.querySelectorAll("#menu-list button");
+
 menu.forEach((menu) =>
   menu.addEventListener("click", (event) => getNewsByCategory(event))
 );
@@ -13,7 +14,7 @@ const getLatestNews = async () => {
   render();
   console.log(newsList);
 };
-// 버튼에 클릭이벤트 추가
+// 카테고리 조회
 const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
   console.log("category", category);
@@ -38,12 +39,14 @@ const getNewsByKeyword = async () => {
   render();
 };
 
+// 엔터키로 검색
 document.getElementById("search-input").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     getNewsByKeyword();
   }
 });
 
+// 화면 렌더링
 const render = () => {
   const newsHTML = newsList
     .map(
