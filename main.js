@@ -1,42 +1,51 @@
 const apiKey = `6c9ebc66510b40e3b8f76a56e9af9fb2`;
 let newsList = [];
 const menu = document.querySelectorAll("#menu-list button");
+let url = new URL(
+  `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`
+);
 
 menu.forEach((menu) =>
   menu.addEventListener("click", (event) => getNewsByCategory(event))
 );
 
+const getNews = async () => {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (response.status === 200) {
+      if (data.articles.length === 0) {
+        throw new Error("검색어와 일치하는 결과가 없습니다");
+      }
+      newsList = data.articles;
+      render();
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (error) {
+    errorRender(error.message);
+  }
+};
+
 const getLatestNews = async () => {
-  let url = ` https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`;
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render();
-  console.log(newsList);
+  url = ` https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`;
+  await getNews();
 };
 // 카테고리 조회
 const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
-  console.log("category", category);
-  const url = new URL(
+  url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?category=${category}`
   );
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log("ddd", data);
-  newsList = data.articles;
-  render();
+  await getNews();
 };
 // 키워드로 검색하기
 const getNewsByKeyword = async () => {
   const keyword = document.getElementById("search-input").value;
-  const url = new URL(
+  url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?q=${keyword}`
   );
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render();
+  await getNews();
 };
 
 // 엔터키로 검색
@@ -76,6 +85,13 @@ const render = () => {
     .join("");
 
   document.getElementById(`news_board`).innerHTML = newsHTML;
+};
+
+const errorRender = (errorMessage) => {
+  const errorHTML = `<div class="alert alert-danger" role="alert">
+  ${errorMessage} 
+  </div>`;
+  document.getElementById("news_board").innerHTML = errorHTML;
 };
 
 getLatestNews();
