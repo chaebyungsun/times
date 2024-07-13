@@ -4,6 +4,10 @@ const menu = document.querySelectorAll("#menu-list button");
 let url = new URL(
   `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`
 );
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
 
 menu.forEach((menu) =>
   menu.addEventListener("click", (event) => getNewsByCategory(event))
@@ -11,6 +15,9 @@ menu.forEach((menu) =>
 
 const getNews = async () => {
   try {
+    url.searchParams.set("page", page); // => &page=page
+    url.searchParams.set("pageSize", pageSize);
+
     const response = await fetch(url);
     const data = await response.json();
     if (response.status === 200) {
@@ -18,7 +25,9 @@ const getNews = async () => {
         throw new Error("검색어와 일치하는 결과가 없습니다");
       }
       newsList = data.articles;
+      totalResults = data.totalResults;
       render();
+      paginationRender();
     } else {
       throw new Error(data.message);
     }
@@ -28,7 +37,9 @@ const getNews = async () => {
 };
 
 const getLatestNews = async () => {
-  url = ` https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`;
+  url = new URL(
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`
+  );
   await getNews();
 };
 // 카테고리 조회
@@ -92,6 +103,52 @@ const errorRender = (errorMessage) => {
   ${errorMessage} 
   </div>`;
   document.getElementById("news_board").innerHTML = errorHTML;
+};
+
+const paginationRender = () => {
+  //totalpages
+  const totalPages = Math.ceil(totalResults / pageSize);
+  //pageGroup
+  const pageGroup = Math.ceil(page / groupSize);
+  //lastPage
+  let lastPage = pageGroup * groupSize;
+
+  if (lastPage > totalPages) {
+    lastPage = totalPages;
+  }
+  //firstPage
+  const firstPage =
+    lastPage - (groupSize - 1) <= 0 ? 1 : lastPage - (groupSize - 1);
+
+  let paginationHTML = `<li class="page-item" onclick="pageClick(1)">
+                        <a class="page-link" href='#js-bottom'>&lt;&lt;</a>
+                      </li>
+<li class="page-item" onclick="moveToPage(${
+    page - 1
+  })"> <a class="page-link" href='#js-bottom'>&lt;</a></li>`;
+
+  for (let i = firstPage; i <= lastPage; i++) {
+    paginationHTML += ` <li class="page-item ${
+      i === page ? "active" : ""
+    }" onclick="moveToPage(${i})">
+        <a class="page-link"  >
+         ${i}
+        </a>
+      </li>`;
+  }
+  paginationHTML += ` <li class="page-item" onclick="moveToPage(${
+    page + 1
+  })"><a class="page-link" href='#js-bottom'>&gt;</a></li>
+  <li class="page-item" onclick="pageClick(${totalPages})">
+                        <a class="page-link" href='#js-bottom'>&gt;&gt;</a>
+                       </li>`;
+
+  document.querySelector(".pagination").innerHTML = paginationHTML;
+};
+
+const moveToPage = (pageNum) => {
+  page = pageNum; // 페이지값 유동적으로
+  getNews();
 };
 
 getLatestNews();

@@ -79,13 +79,18 @@
 }
 .icon-button {
   margin-top: 5px;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 .hide {
   display: none;
 }
 #input-area {
   display: none;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 @media (max-width: 992px) {
   .head_line svg {
