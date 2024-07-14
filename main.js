@@ -106,46 +106,64 @@ const errorRender = (errorMessage) => {
 };
 
 const paginationRender = () => {
-  //totalpages
+  //전체 페이지 수
   const totalPages = Math.ceil(totalResults / pageSize);
-  //pageGroup
+  //현재 페이지
   const pageGroup = Math.ceil(page / groupSize);
-  //lastPage
+  //마지막 페이지
   let lastPage = pageGroup * groupSize;
 
   if (lastPage > totalPages) {
     lastPage = totalPages;
   }
-  //firstPage
+  //첫번째 페이지
   const firstPage =
     lastPage - (groupSize - 1) <= 0 ? 1 : lastPage - (groupSize - 1);
 
-  let paginationHTML = `<li class="page-item" onclick="pageClick(1)">
-                        <a class="page-link" href='#js-bottom'>&lt;&lt;</a>
-                      </li>
-<li class="page-item" onclick="moveToPage(${
-    page - 1
-  })"> <a class="page-link" href='#js-bottom'>&lt;</a></li>`;
+  let paginationHTML = ``;
+
+  if (page > 1) {
+    paginationHTML = `<li class="page-item" onclick="moveToPage(1)"><a class="page-link" href="#">&lt;&lt;</a></li>
+    <li class="page-item" onclick="moveToPage(${
+      page - 1
+    })"><a class="page-link" href="#">&lt;</a></li>`;
+  }
 
   for (let i = firstPage; i <= lastPage; i++) {
-    paginationHTML += ` <li class="page-item ${
+    paginationHTML += `<li class="page-item ${
       i === page ? "active" : ""
-    }" onclick="moveToPage(${i})">
-        <a class="page-link"  >
-         ${i}
-        </a>
-      </li>`;
+    } "onclick="moveToPage(${i})"><a class="page-link" href="#">${i}</a></li>`;
   }
-  paginationHTML += ` <li class="page-item" onclick="moveToPage(${
-    page + 1
-  })"><a class="page-link" href='#js-bottom'>&gt;</a></li>
-  <li class="page-item" onclick="pageClick(${totalPages})">
-                        <a class="page-link" href='#js-bottom'>&gt;&gt;</a>
-                       </li>`;
+
+  if (page < totalPages) {
+    paginationHTML += `<li class="page-item" onclick="moveToPage(${
+      page + 1
+    })"><a class="page-link" href="#">&gt;</a></li>
+    <li class="page-item" onclick="moveToPage(${totalPages})"><a class="page-link" href="#">&gt;&gt;</a></li>`;
+  }
 
   document.querySelector(".pagination").innerHTML = paginationHTML;
 };
 
+// 에러메세지
+const getErrorMessage = (status) => {
+  switch (status) {
+    case 400:
+      return "잘못된 요청입니다. (400)";
+    case 401:
+      return "인증이 필요합니다. (401)";
+    case 404:
+      return "데이터를 불러오지 못했습니다. (404)";
+    case 404:
+      return "짧은 시간에 너무 많은 요청을 보냈습니다. (429)";
+    case 500:
+      return "서버에서 오류가 발생했습니다. (500)";
+    default:
+      return "네트워크 응답이 올바르지 않습니다.";
+  }
+};
+
+// 페이지 이동
 const moveToPage = (pageNum) => {
   page = pageNum; // 페이지값 유동적으로
   getNews();
