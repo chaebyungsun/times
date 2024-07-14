@@ -44,6 +44,7 @@ const getLatestNews = async () => {
 };
 // 카테고리 조회
 const getNewsByCategory = async (event) => {
+  page = 1;
   const category = event.target.textContent.toLowerCase();
   url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?category=${category}`
